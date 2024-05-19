@@ -11,7 +11,8 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Port int
+	Port   int
+	ApiKey string
 }
 
 var AppConfig *Config

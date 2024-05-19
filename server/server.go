@@ -10,7 +10,9 @@ import (
 
 func Run() {
 	r := gin.Default()
-	handler.RegisterRoutes(r)
 	port := config.AppConfig.Server.Port
+	apiKey := config.AppConfig.Server.ApiKey
+	handler.RegisterRoutes(r, apiKey)
+
 	r.Run(fmt.Sprintf(":%d", port))
 }

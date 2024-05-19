@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Ben352/autosuggestApi/internal/autocomplete"
+	"github.com/Ben352/autosuggestApi/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,11 +16,16 @@ type loadFileBody struct {
 	FileName string `json:"fileName" binding:"required"`
 }
 
-func RegisterRoutes(r *gin.Engine) {
+func RegisterRoutes(r *gin.Engine, apiKey string) {
+
+	apiMiddleware := middleware.ValidateAPIKeyMiddleware(apiKey)
 	r.GET("/autocomplete", autocompleteHandler)
-	r.POST("/admin/addWord", addWordHandler)
-	r.POST("/admin/save", saveTrieHandler)
-	r.POST("/admin/load", loadTrieHandler)
+
+	// admin rotues
+	admin := r.Group("/admin", apiMiddleware)
+	admin.POST("/addWord", addWordHandler)
+	admin.POST("/save", saveTrieHandler)
+	admin.POST("/load", loadTrieHandler)
 }
 
 func saveTrieHandler(c *gin.Context) {
